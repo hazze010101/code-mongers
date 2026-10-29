@@ -4,9 +4,198 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <script src="https://jsdelivr.net"></script>
 </head>
 <body>
-    <h1>Hello World</h1>
-    <p>damnn</p>
+    <!-- Form Section -->
+<form id="skill-Form">
+  <input type="text" id="student_name" placeholder="Your Name" required>
+  <input type="text" id="email" placeholder="Email" required>
+  <input type="text" id="enrollment_id" placeholder="Your Enrollment Id" required>
+  <input type="text" id="skills_offered" placeholder="Skill you can teach" required>
+  <button type="submit">Post to Exchange</button>
+</form>
+
+<!-- Feed Container Section -->
+<div id="feed-container">
+  <!-- JavaScript will inject the database entries right here -->
+</div>
+<script>
+    // ==========================================
+// 1. DATABASE CONNECTION
+// ==========================================
+// Replace these strings with the actual keys from your Supabase API settings
+const SUPABASE_URL = "https://qivkalxpsnyaozxrwjnm.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpdmthbHhwc255YW96eHJ3am5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyMzgzMTUsImV4cCI6MjEwODgxNDMxNX0.Q3Q7mgS5Rpi5u8_-AlgxtGYRmXSPrtxThdruvehYH48";
+
+// Initialize the Supabase client
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Global array to store all fetched posts so we can search/filter them offline
+let localPostsArray = [];
+
+// ==========================================
+// 2. FETCH DATA (Show posts on screen)
+// ==========================================
+async function fetchSkills() {
+    console.log("Fetching skills from Supabase...");
+    
+    // Grab all columns from your 'skill_posts' table, sorted by newest first
+    const { data, error } = await supabase
+        .from('skills_posts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error("Error fetching data:", error.message);
+        alert("Failed to load skills. Check console for errors.");
+        return;
+    }
+
+    // Save the data to our global array so the search bar can read it
+    localPostsArray = data;
+    
+    // Send this array to the function that actually draws the cards on screen
+    displayCards(localPostsArray);
+}
+
+// Function that handles the visual rendering of the HTML cards
+function displayCards(posts) {
+    const feedContainer = document.getElementById('feed-container'); // Make sure your HTML div has this ID
+    
+    if (!feedContainer) return;
+    
+    feedContainer.innerHTML = ''; // Clear out the old cards/loading text
+
+    if (posts.length === 0) {
+        feedContainer.innerHTML = `<p class="text-muted text-center my-4">No skills listed yet. Be the first!</p>`;
+        return;
+    }
+
+    // Loop through each item in the database and create a Bootstrap card for it
+    posts.forEach(post => {
+        feedContainer.innerHTML += `
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title fw-bold text-dark">${post.name}</h5>
+                            <hr class="my-2 text-muted">
+                            <p class="card-text mb-2">
+                                <span class="badge bg-success-subtle text-success p-2 w-100 text-start">
+                                    🗣️ Offers: ${post.skill_offered}
+                                </span>
+                            </p>
+                            <p class="card-text mb-3">
+                                <span class="badge bg-primary-subtle text-primary p-2 w-100 text-start">
+                                    🎯 Wants: ${post.skill_wanted}
+                                </span>
+                            </p>
+                        </div>
+                        <a href="https://wa.me{post.email_or_discord.replace(/[^0-9]/g, '')}" target="_blank" class="btn btn-indigo text-white w-100 mt-2">
+                            📱 Connect Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+// ==========================================
+// 3. SEND DATA (Save form inputs to Supabase)
+// ==========================================
+async function postSkill(event) {
+    event.preventDefault(); // Stops the page from refreshing when the form is submitted
+    
+    // Grab the values exactly as typed into the form input boxes
+    // (Make sure your HTML input elements have these exact IDs!)
+    const studentName = document.getElementById('student_name').value;
+    const studentContact = document.getElementById('email').value;
+    const eid = document.getElementById('enrollment_id').value;
+    const skillOffered = document.getElementById('skills_offered').value;
+
+    console.log("Sending data to Supabase...");
+
+    // Insert data into your Supabase table
+    const { data, error } = await supabase
+        .from('skills_posts')
+        .insert([
+            { 
+                student_name: studentName, 
+                email: studentContact, 
+                enrollment_id: eid, 
+                skills_offered: skillOffered
+            }
+        ]);
+
+    if (error) {
+        console.error("Error inserting data:", error.message);
+        alert("Error saving data. Please check your Supabase table settings.");
+        return;
+    }
+
+    alert("🎉 Skill successfully posted!");
+    
+    // Reset the form so it is blank again
+    document.getElementById('skill-Form').reset();
+    
+    // Automatically switch back to the main view and refresh the feed
+    showSection('find-section'); 
+    fetchSkills();
+}
+
+// ==========================================
+// 4. SEARCH & FILTER LOGIC
+// ==========================================
+function filterSkills() {
+    const searchBar = document.getElementById('searchBar'); // Make sure your search input has this ID
+    const query = searchBar.value.toLowerCase();
+
+    // Filter our local posts array to find matches in name, offered skill, or wanted skill
+    const filteredPosts = localPostsArray.filter(post => {
+        return post.skill_offered.toLowerCase().includes(query) || 
+               post.skill_wanted.toLowerCase().includes(query) ||
+               post.name.toLowerCase().includes(query);
+    });
+
+    // Re-render only the matched cards
+    displayCards(filteredPosts);
+}
+
+// ==========================================
+// 5. PAGE NAVIGATION LOGIC (Single Page Application)
+// ==========================================
+function showSection(sectionId) {
+    // Hide both main views
+    document.getElementById('find-section').style.display = 'none';
+    document.getElementById('post-section').style.display = 'none';
+    
+    // Show the requested view
+    document.getElementById(sectionId).style.display = 'block';
+}
+
+// ==========================================
+// 6. EVENT LISTENERS (Tying everything together)
+// ==========================================
+window.onload = function() {
+    // 1. Immediately fetch and display all data when the site opens
+    fetchSkills();
+
+    // 2. Listen for form submissions
+    const form = document.getElementById('skill-Form');
+    if (form) {
+        form.addEventListener('submit', postSkill);
+    }
+
+    // 3. Listen for keypresses in the search bar
+    const searchBar = document.getElementById('searchBar');
+    if (searchBar) {
+        searchBar.addEventListener('input', filterSkills);
+    }
+};
+
+</script>
 </body>
 </html>
