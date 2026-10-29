@@ -141,28 +141,6 @@
       box-shadow: 0 5px 18px rgba(15, 23, 42, 0.035);
     }
 
-    .search-wrap {
-      position: relative;
-    }
-
-    .search-wrap .search-icon {
-      position: absolute;
-      left: 17px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #94a3b8;
-      pointer-events: none;
-    }
-
-    .search-input {
-      min-height: 52px;
-      padding-left: 46px;
-      border-radius: 12px;
-      border-color: var(--border);
-      box-shadow: none !important;
-    }
-
-    .search-input:focus,
     .form-control:focus,
     .form-select:focus {
       border-color: #818cf8;
@@ -260,6 +238,13 @@
       font-size: 1.5rem;
       font-weight: 800;
       color: var(--navy);
+    }
+
+    .credit-balance {
+      color: #166534;
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
     }
 
     .empty-state {
@@ -475,23 +460,47 @@
           </div>
         </div>
 
-        <!-- Search -->
-        <div class="surface-card p-3 p-md-4 mb-4">
-          <label class="form-label fw-semibold"
-                 for="searchInput">Search the skill directory</label>
-          <div class="search-wrap">
-            <i class="bi bi-search search-icon" aria-hidden="true"></i>
-            <input
-              type="search"
-              id="searchInput"
-              class="form-control search-input"
-              placeholder="Try coding, photography, design..."
-              autocomplete="off"
-              aria-describedby="searchHelp"
-            >
+        <section class="surface-card p-3 p-md-4 mb-4"
+                 aria-labelledby="creditWalletHeading">
+          <div class="row align-items-center g-3">
+            <div class="col-12 col-md-4">
+              <h3 class="h5 fw-bold mb-2" id="creditWalletHeading">
+                <i class="bi bi-wallet2 me-1" aria-hidden="true"></i>
+                Time credit wallet
+              </h3>
+              <div>
+                <span class="credit-balance" id="creditBalance">180</span>
+                <span class="text-secondary">credits</span>
+              </div>
+            </div>
+            <div class="col-12 col-md-8">
+              <p class="section-subtitle mb-2">
+                Earn 60 credits when you finish teaching, and spend 60 credits
+                to start learning a new skill. Each browser wallet starts with
+                180 credits and is saved on this device.
+              </p>
+              <div id="creditHistory" class="helper-text"
+                   aria-live="polite">No credit activity yet.</div>
+            </div>
           </div>
+          <div id="creditMessage" class="mt-3" role="status"
+               aria-live="polite"></div>
+        </section>
+
+        <div class="surface-card p-3 p-md-4 mb-4">
+          <label class="form-label fw-semibold" for="searchInput">
+            Find a student or skill
+          </label>
+          <input
+            type="search"
+            class="form-control"
+            id="searchInput"
+            placeholder="Search names or skills they teach..."
+            autocomplete="off"
+            aria-describedby="searchHelp"
+          >
           <div id="searchHelp" class="helper-text mt-2">
-            Search by the skill a student teaches or wants to learn.
+            Search by student name or the skill they can teach.
           </div>
         </div>
 
@@ -505,11 +514,11 @@
         <!-- No-results / error / loading state -->
         <div id="emptyState" class="surface-card empty-state d-none">
           <div class="empty-icon mb-3">
-            <i class="bi bi-search" aria-hidden="true"></i>
+            <i class="bi bi-people" aria-hidden="true"></i>
           </div>
-          <h3 class="h5 fw-bold" id="emptyTitle">No skills found</h3>
+          <h3 class="h5 fw-bold" id="emptyTitle">No skills have been posted yet</h3>
           <p class="section-subtitle mb-3" id="emptyDescription">
-            Try a different search or post a skill of your own.
+            Be the first to share a skill with your campus community.
           </p>
           <button class="btn btn-outline-primary" id="emptyAction"
                   type="button">Post a skill</button>
@@ -575,26 +584,24 @@
             </div>
 
             <div class="mb-4">
-              <label for="contactInfo" class="field-label">
-                Contact information <span class="required-star">*</span>
+              <label for="emailId" class="field-label">
+                Email ID <span class="required-star">*</span>
               </label>
               <input
-                type="text"
+                type="email"
                 class="form-control"
-                id="contactInfo"
-                name="contact_info"
-                placeholder="Email, WhatsApp number, or Discord username"
-                minlength="3"
+                id="emailId"
+                name="email_id"
+                placeholder="e.g. alex@example.com"
                 maxlength="200"
-                autocomplete="off"
+                autocomplete="email"
                 required
               >
               <div class="invalid-feedback">
-                Enter a valid contact detail.
+                Enter a valid email address.
               </div>
               <div class="helper-text mt-2">
-                Use contact information you are comfortable sharing with
-                other students.
+                Your email is shown when another student connects with you.
               </div>
             </div>
 
@@ -619,30 +626,30 @@
               </div>
 
               <div class="col-md-6">
-                <label for="skillLearn" class="field-label">
-                  Skill you want to learn
+                <label for="enrollmentNo" class="field-label">
+                  Enrollment No.
                   <span class="required-star">*</span>
                 </label>
                 <input
                   type="text"
                   class="form-control"
-                  id="skillLearn"
-                  name="skill_learn"
-                  placeholder="e.g. Video editing"
+                  id="enrollmentNo"
+                  name="enrollment_no"
+                  placeholder="Enter your enrollment number"
                   minlength="2"
                   maxlength="100"
                   required
                 >
                 <div class="invalid-feedback">
-                  Enter a skill between 2 and 100 characters.
+                  Enter an enrollment number between 2 and 100 characters.
                 </div>
               </div>
             </div>
 
             <div class="alert alert-info small border-0 rounded-3">
               <i class="bi bi-info-circle me-2"></i>
-              Please don't submit passwords, student ID numbers, or other
-              sensitive personal information.
+              Your enrollment number is shown only in the contact details
+              after someone connects. Never submit passwords.
             </div>
 
             <div class="d-grid gap-2 d-sm-flex mt-4">
@@ -697,16 +704,16 @@
           </div>
 
           <div class="mb-4">
-            <div class="helper-text mb-2">WANTS TO LEARN</div>
-            <span class="skill-badge badge-learn" id="contactLearn"></span>
+            <div class="helper-text mb-2">ENROLLMENT NO.</div>
+            <span class="skill-badge badge-learn" id="contactEnrollmentNo"></span>
           </div>
 
           <div class="surface-card p-3">
-            <div class="helper-text mb-2">CONTACT INFORMATION</div>
-            <div class="fw-semibold text-break" id="contactDetails"></div>
+            <div class="helper-text mb-2">EMAIL ID</div>
+            <div class="fw-semibold text-break" id="contactEmail"></div>
             <button type="button" class="btn btn-outline-primary btn-sm mt-3"
                     id="copyContactButton">
-              <i class="bi bi-copy me-1"></i> Copy contact
+              <i class="bi bi-copy me-1"></i> Copy email
             </button>
           </div>
 
@@ -746,10 +753,14 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+    (() => {
     "use strict";
 
-    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+    if (window.aSwapInitializedDocument === document) return;
+    window.aSwapInitializedDocument = document;
+
+    const SUPABASE_URL = "https://qivkalxpsnyaozxrwjnm.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpdmthbHhwc255YW96eHJ3am5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyMzgzMTUsImV4cCI6MjEwODgxNDMxNX0.Q3Q7mgS5Rpi5u8_-AlgxtGYRmXSPrtxThdruvehYH48";
 
     const supabaseConfigured =
       SUPABASE_URL !== "YOUR_SUPABASE_PROJECT_URL" &&
@@ -774,6 +785,14 @@
     let currentContact = null;
     let isFetching = false;
     let isPosting = false;
+    const CREDIT_AMOUNT = 60;
+    const STARTING_CREDITS = 180;
+    const CREDIT_STORAGE_KEY = "aSwapTimeCredits";
+    let creditState = {
+      balance: STARTING_CREDITS,
+      transactions: [],
+      completed: {}
+    };
 
     const $ = (selector) => document.querySelector(selector);
 
@@ -818,6 +837,159 @@
     function showToast(message) {
       $("#toastMessage").textContent = message;
       toast.show();
+    }
+
+    function loadCreditState() {
+      try {
+        const savedState = JSON.parse(
+          window.localStorage.getItem(CREDIT_STORAGE_KEY) || "null"
+        );
+
+        if (savedState === null) {
+          window.localStorage.setItem(
+            CREDIT_STORAGE_KEY,
+            JSON.stringify(creditState)
+          );
+          return creditState;
+        }
+
+        const validState =
+          savedState &&
+          Number.isInteger(savedState.balance) &&
+          savedState.balance >= 0 &&
+          Array.isArray(savedState.transactions) &&
+          savedState.transactions.every((transaction) =>
+            transaction &&
+            (transaction.amount === CREDIT_AMOUNT ||
+              transaction.amount === -CREDIT_AMOUNT) &&
+            typeof transaction.label === "string" &&
+            typeof transaction.timestamp === "string"
+          ) &&
+          savedState.completed &&
+          typeof savedState.completed === "object" &&
+          !Array.isArray(savedState.completed);
+
+        if (!validState) {
+          throw new Error("Saved credit data has an invalid format.");
+        }
+
+        if (
+          savedState.balance === 0 &&
+          savedState.transactions.length === 0 &&
+          Object.keys(savedState.completed).length === 0
+        ) {
+          savedState.balance = STARTING_CREDITS;
+          window.localStorage.setItem(
+            CREDIT_STORAGE_KEY,
+            JSON.stringify(savedState)
+          );
+        }
+
+        return savedState;
+      } catch (error) {
+        console.error("Unable to load time credits:", error);
+        $("#creditMessage").textContent =
+          "Your saved credit history could not be loaded. A new wallet is being used.";
+        $("#creditMessage").className = "mt-3 alert alert-warning py-2 mb-0";
+        return creditState;
+      }
+    }
+
+    function getSkillCreditKey(skill) {
+      const listingId = skill.id ?? skill.created_at ?? [
+        skill.full_name,
+        skill.email_id,
+        skill.skill_teach,
+        skill.enrollment_no
+      ];
+      return JSON.stringify(listingId);
+    }
+
+    function renderCreditWallet() {
+      $("#creditBalance").textContent = String(creditState.balance);
+
+      const history = $("#creditHistory");
+      history.replaceChildren();
+      if (creditState.transactions.length === 0) {
+        history.textContent = "No credit activity yet.";
+        return;
+      }
+
+      creditState.transactions.slice(-3).reverse().forEach((transaction) => {
+        const amount = transaction.amount > 0
+          ? `+${transaction.amount}`
+          : String(transaction.amount);
+        history.appendChild(
+          createElement("div", "", `${transaction.label}: ${amount} credits`)
+        );
+      });
+    }
+
+    function showCreditMessage(message, type) {
+      const element = $("#creditMessage");
+      element.textContent = message;
+      element.className = message
+        ? `mt-3 alert alert-${type} py-2 mb-0`
+        : "mt-3";
+    }
+
+    function recordCreditAction(skill, action) {
+      const actionKey = `${action}:${getSkillCreditKey(skill)}`;
+      if (creditState.completed[actionKey]) {
+        showCreditMessage(
+          "This credit action has already been recorded for this skill.",
+          "info"
+        );
+        return;
+      }
+
+      const amount = action === "teach" ? CREDIT_AMOUNT : -CREDIT_AMOUNT;
+      if (creditState.balance + amount < 0) {
+        showCreditMessage(
+          "You need 60 credits to learn a skill. Teach a skill first to earn credits.",
+          "warning"
+        );
+        return;
+      }
+
+      const nextState = {
+        balance: creditState.balance + amount,
+        transactions: [
+          ...creditState.transactions,
+          {
+            amount,
+            label: action === "teach"
+              ? `Taught ${skill.skill_teach}`
+              : `Started learning ${skill.skill_teach}`,
+            timestamp: new Date().toISOString()
+          }
+        ],
+        completed: { ...creditState.completed, [actionKey]: true }
+      };
+
+      try {
+        window.localStorage.setItem(
+          CREDIT_STORAGE_KEY,
+          JSON.stringify(nextState)
+        );
+      } catch (error) {
+        console.error("Unable to save time credits:", error);
+        showCreditMessage(
+          "Your credit change could not be saved. Check your browser storage and try again.",
+          "danger"
+        );
+        return;
+      }
+
+      creditState = nextState;
+      renderCreditWallet();
+      showCreditMessage(
+        action === "teach"
+          ? "Teaching completed — 60 credits added."
+          : "Learning started — 60 credits spent.",
+        "success"
+      );
+      filterSkills();
     }
 
     function showFormMessage(message, type = "danger") {
@@ -876,7 +1048,6 @@
         $("#fullName").focus({ preventScroll: true });
       } else {
         window.location.hash = "dashboard";
-        searchInput.focus({ preventScroll: true });
       }
 
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -918,9 +1089,6 @@
       skills.forEach((skill) => {
         if (skill.skill_teach) {
           unique.add(skill.skill_teach.trim().toLowerCase());
-        }
-        if (skill.skill_learn) {
-          unique.add(skill.skill_learn.trim().toLowerCase());
         }
       });
 
@@ -982,12 +1150,12 @@
       const learnLabel = createElement(
         "div",
         "helper-text mb-2 fw-semibold",
-        "WANTS TO LEARN"
+        "ENROLLMENT NO."
       );
       const learnBadge = createElement(
         "span",
         "skill-badge badge-learn",
-        skill.skill_learn
+        "Shown after connecting"
       );
       learnBlock.append(learnLabel, learnBadge);
 
@@ -1008,7 +1176,42 @@
         openContact(skill);
       });
 
-      card.append(header, teachBlock, learnBlock, connectButton);
+      const teachActionKey = `teach:${getSkillCreditKey(skill)}`;
+      const teachButton = createElement(
+        "button",
+        "btn btn-outline-success w-100 mt-2",
+        creditState.completed[teachActionKey]
+          ? "Teaching completed (+60)"
+          : "Mark teaching complete (+60)"
+      );
+      teachButton.type = "button";
+      teachButton.disabled = Boolean(creditState.completed[teachActionKey]);
+      teachButton.addEventListener("click", () => {
+        recordCreditAction(skill, "teach");
+      });
+
+      const learnActionKey = `learn:${getSkillCreditKey(skill)}`;
+      const learnButton = createElement(
+        "button",
+        "btn btn-outline-primary w-100 mt-2",
+        creditState.completed[learnActionKey]
+          ? "Learning started (-60)"
+          : "Learn this skill (-60)"
+      );
+      learnButton.type = "button";
+      learnButton.disabled = Boolean(creditState.completed[learnActionKey]);
+      learnButton.addEventListener("click", () => {
+        recordCreditAction(skill, "learn");
+      });
+
+      card.append(
+        header,
+        teachBlock,
+        learnBlock,
+        connectButton,
+        teachButton,
+        learnButton
+      );
       column.append(card);
 
       return column;
@@ -1019,26 +1222,20 @@
       emptyState.classList.add("d-none");
 
       if (skills.length === 0) {
-        emptyTitle.textContent = searchInput.value.trim()
+        const searching = Boolean(searchInput.value.trim());
+        emptyTitle.textContent = searching
           ? "No matching skills"
           : "No skills have been posted yet";
-
-        emptyDescription.textContent = searchInput.value.trim()
-          ? "Try another keyword, or browse the community again."
+        emptyDescription.textContent = searching
+          ? "Try another name or skill."
           : "Be the first to share a skill with your campus community.";
-
-        emptyAction.textContent = searchInput.value.trim()
-          ? "Clear search"
-          : "Post a skill";
-
-        emptyAction.onclick = () => {
-          if (searchInput.value.trim()) {
-            searchInput.value = "";
-            filterSkills();
-          } else {
-            switchView("post");
-          }
-        };
+        emptyAction.textContent = searching ? "Clear search" : "Post a skill";
+        emptyAction.onclick = searching
+          ? () => {
+              searchInput.value = "";
+              filterSkills();
+            }
+          : () => switchView("post");
 
         emptyState.classList.remove("d-none");
         return;
@@ -1064,13 +1261,13 @@
           createElement(
             "div",
             "alert alert-warning rounded-3",
-            "Supabase is not configured. Add your project URL and anon/publishable key in the script to load skill posts."
+            "Supabase is not connected. Add the anon/public key from your Supabase project settings to SUPABASE_ANON_KEY in this file."
           )
         );
 
         emptyTitle.textContent = "Connect your Supabase project";
         emptyDescription.textContent =
-          "Update the two configuration constants in index.html, then reload this page.";
+          "Add your Supabase anon/public key to A-SWAP.html, then reload this page.";
         emptyAction.textContent = "Post a skill";
         emptyAction.onclick = () => switchView("post");
         emptyState.classList.remove("d-none");
@@ -1091,12 +1288,23 @@
       emptyState.classList.add("d-none");
 
       try {
-        const { data, error } = await supabase
-          .from("skill_posts")
-          .select("id, full_name, contact_info, skill_teach, skill_learn, created_at")
-          .order("created_at", { ascending: false });
+        let data;
+        for (let attempt = 0; attempt < 2; attempt += 1) {
+          const result = await supabase
+            .from("skills_posts")
+            .select("full_name, email_id, skill_teach, enrollment_no")
+            .order("full_name", { ascending: true });
 
-        if (error) throw error;
+          if (!result.error) {
+            data = result.data;
+            break;
+          }
+
+          if (attempt === 1) throw result.error;
+
+          console.warn("Skill posts failed to load; retrying once:", result.error);
+          await new Promise((resolve) => window.setTimeout(resolve, 1000));
+        }
 
         allSkills = Array.isArray(data) ? data : [];
         updateStats(allSkills);
@@ -1114,7 +1322,9 @@
           createElement(
             "div",
             "alert alert-danger rounded-3",
-            "We couldn't load the skill directory. Check your connection and Supabase table permissions, then try again."
+            error?.status === 522 || /522|timed out|timeout/i.test(error?.message || "")
+              ? "Supabase is temporarily unavailable (HTTP 522). Please wait and try again."
+              : "We couldn't load the skill directory. Check your connection and Supabase table permissions, then try again."
           )
         );
 
@@ -1127,15 +1337,12 @@
 
     function filterSkills() {
       const query = searchInput.value.trim().toLowerCase();
-
-      const filtered = allSkills.filter((skill) => {
-        const teach = String(skill.skill_teach || "").toLowerCase();
-        const learn = String(skill.skill_learn || "").toLowerCase();
-
-        return teach.includes(query) || learn.includes(query);
-      });
-
-      renderSkills(filtered);
+      const matches = allSkills.filter((skill) =>
+        [skill.full_name, skill.skill_teach].some((value) =>
+          String(value || "").toLowerCase().includes(query)
+        )
+      );
+      renderSkills(matches);
     }
 
     searchInput.addEventListener("input", filterSkills);
@@ -1154,27 +1361,27 @@
         .toUpperCase() || "?";
 
       $("#contactTeach").textContent = skill.skill_teach || "Not specified";
-      $("#contactLearn").textContent = skill.skill_learn || "Not specified";
-      $("#contactDetails").textContent =
-        skill.contact_info || "No contact information provided";
+      $("#contactEnrollmentNo").textContent =
+        skill.enrollment_no || "Not provided";
+      $("#contactEmail").textContent = skill.email_id || "No email provided";
 
       contactModal.show();
     }
 
     $("#copyContactButton").addEventListener("click", async () => {
-      if (!currentContact || !currentContact.contact_info) {
-        showToast("No contact information is available.");
+      if (!currentContact || !currentContact.email_id) {
+        showToast("No email address is available.");
         return;
       }
 
       try {
         await navigator.clipboard.writeText(
-          String(currentContact.contact_info)
+          String(currentContact.email_id)
         );
-        showToast("Contact information copied.");
+        showToast("Email address copied.");
       } catch (error) {
         console.error("Clipboard access failed:", error);
-        showToast("Copy is unavailable. Please select the contact text manually.");
+        showToast("Copy is unavailable. Please select the email manually.");
       }
     });
 
@@ -1193,7 +1400,7 @@
 
       if (!supabaseConfigured || !supabase) {
         showFormMessage(
-          "Supabase is not configured. Add your project URL and anon/publishable key before submitting.",
+          "Supabase is not connected. Add the anon/public key from your Supabase project settings to A-SWAP.html before publishing.",
           "warning"
         );
         return;
@@ -1201,16 +1408,16 @@
 
       const formData = {
         full_name: $("#fullName").value.trim(),
-        contact_info: $("#contactInfo").value.trim(),
+        email_id: $("#emailId").value.trim(),
         skill_teach: $("#skillTeach").value.trim(),
-        skill_learn: $("#skillLearn").value.trim()
+        enrollment_no: $("#enrollmentNo").value.trim()
       };
 
       const limits = {
         full_name: 100,
-        contact_info: 200,
+        email_id: 200,
         skill_teach: 100,
-        skill_learn: 100
+        enrollment_no: 100
       };
 
       for (const [field, value] of Object.entries(formData)) {
@@ -1226,7 +1433,7 @@
 
       try {
         const { error } = await supabase
-          .from("skill_posts")
+          .from("skills_posts")
           .insert([formData]);
 
         if (error) throw error;
@@ -1254,6 +1461,9 @@
 
 
     function initializeApp() {
+      creditState = loadCreditState();
+      renderCreditWallet();
+
       const initialView =
         window.location.hash === "#post-skill" ? "post" : "dashboard";
 
@@ -1281,6 +1491,7 @@
     }
 
     initializeApp();
+    })();
   </script>
 </body>
 </html>
