@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <meta name="description" content="Exchange skills, meet fellow students, and learn together on campus with A-Swap.">
+
+  <title>A-Swap | Campus Skill Exchange</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <!-- Bootstrap Icons -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    rel="stylesheet"
+  >
+
+  <!-- Supabase JavaScript Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --navy: #172554;
+      --indigo: #4338ca;
+      --indigo-light: #eef2ff;
+      --page-bg: #f5f7fb;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      padding-top: 76px;
+      background: var(--page-bg);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    .navbar {
+      background: var(--navy);
+      min-height: 76px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.12);
+    }
+
+    .navbar-brand {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: #fff;
+    }
+
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      margin-right: 8px;
+      border-radius: 11px;
+      background: #6366f1;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .college-logo {
+      width: 36px;
+      height: 36px;
+      margin-right: 8px;
+      border-radius: 8px;
+      background: #fff;
+      object-fit: contain;
+    }
+
+    .nav-link {
+      color: #cbd5e1;
+      font-weight: 500;
+      padding: 10px 16px !important;
+      border-radius: 9px;
+      transition: 0.2s ease;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero {
+      padding: 48px 0 42px;
+      background: linear-gradient(125deg, #172554, #3730a3);
+      color: #fff;
+    }
+
+    .hero h1 {
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      line-height: 1.15;
+    }
+
+    .hero p {
+      color: #dbeafe;
+      max-width: 620px;
+    }
+
+    .hero-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 1.7rem;
+    }
+
+    .main-content {
+      padding: 34px 0 60px;
+    }
+
+    .section-heading {
+      font-weight: 750;
+      letter-spacing: -0.6px;
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+    }
+
+    .surface-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 5px 18px rgba(15, 23, 42, 0.035);
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: #818cf8;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12) !important;
+    }
+
+    .skill-card {
+      height: 100%;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      border-radius: 14px;
+      background: #e0e7ff;
+      color: #3730a3;
+      font-weight: 800;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+    }
+
+    .skill-badge {
+      display: inline-block;
+      max-width: 100%;
+      padding: 7px 11px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    .badge-teach {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-learn {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 650;
+      font-size: 0.92rem;
+    }
+
+    .form-control {
+      min-height: 48px;
+      border-color: var(--border);
+      border-radius: 10px;
+    }
+
+    .btn-primary {
+      --bs-btn-bg: var(--indigo);
+      --bs-btn-border-color: var(--indigo);
+      --bs-btn-hover-bg: #3730a3;
+      --bs-btn-hover-border-color: #3730a3;
+      --bs-btn-active-bg: #312e81;
+      --bs-btn-active-border-color: #312e81;
+      border-radius: 10px;
+      font-weight: 650;
+    }
+
+    .btn-outline-primary {
+      --bs-btn-color: var(--indigo);
+      --bs-btn-border-color: #c7d2fe;
+      --bs-btn-hover-bg: var(--indigo);
+      --bs-btn-hover-border-color: var(--indigo);
+      border-radius: 10px;
+      font-weight: 650;
+    }
+
+    .btn-connect {
+      width: 100%;
+      padding: 10px 14px;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .credit-balance {
+      color: #166534;
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .empty-state {
+      padding: 54px 20px;
+      text-align: center;
+    }
+
+    .empty-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: var(--indigo-light);
+      color: var(--indigo);
+      font-size: 1.8rem;
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .dashboard-section.hidden {
+      display: none;
+    }
+
+    .form-section .form-card {
+      max-width: 760px;
+      margin-inline: auto;
+    }
+
+    .helper-text {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .required-star {
+      color: #dc2626;
+    }
+
+    .toast-container {
+      z-index: 1100;
+    }
+
+    footer {
+      background: #fff;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 767px) {
+      body {
+        padding-top: 70px;
+      }
+
+      .navbar {
+        min-height: 70px;
+      }
+
+      .hero {
+        padding: 35px 0;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .main-content {
+        padding-top: 25px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Fixed navigation -->
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#dashboard"
+         id="brandLink" aria-label="A-Swap home">
+        <img
+          class="college-logo"
+          src="https://cdn.collegewollege.com/storage/colleges/thumbnails/zDh1vB7tNmwdUW1YiWCniMJi58FTRamHkwkECP8v.webp"
+          alt="Assam down town University logo"
+          width="36"
+          height="36"
+        >
+        A-Swap
+      </a>
+
+      <button class="navbar-toggler" type="button"
+        data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+        aria-controls="mainNavbar" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav ms-auto gap-md-2 mt-3 mt-md-0">
+          <li class="nav-item">
+            <a class="nav-link active" href="#dashboard"
+               data-view="dashboard" aria-current="page">
+              <i class="bi bi-search me-1"></i> Find Skills
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#post-skill" data-view="post">
+              <i class="bi bi-plus-circle me-1"></i> Post a Skill
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero banner -->
+  <header class="hero">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="hero-icon">
+              <i class="bi bi-mortarboard"></i>
+            </span>
+            <span class="small fw-semibold text-uppercase"
+                  style="letter-spacing: 1.5px;">
+              Your campus. Your community.
+            </span>
+          </div>
+
+          <h1 class="display-5 mb-3">
+            Share what you know.<br>Learn what you love.
+          </h1>
+          <p class="fs-6 mb-0">
+            Meet fellow students, exchange skills, and grow together.
+            Discover your next learning partner right here on campus.
+          </p>
+        </div>
+
+        <div class="col-lg-4 d-none d-lg-block text-end">
+          <i class="bi bi-people-fill"
+             style="font-size: 8rem; color: rgba(255,255,255,.18);"
+             aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Dashboard / Find Skills -->
+      <section id="dashboardSection" class="dashboard-section"
+               aria-labelledby="dashboardHeading">
+
+        <div class="d-flex flex-wrap justify-content-between
+                    align-items-end gap-3 mb-4">
+          <div>
+            <h2 class="section-heading h3 mb-2"
+                id="dashboardHeading">Explore campus skills</h2>
+            <p class="section-subtitle mb-0">
+              Find a student who can teach you something new.
+            </p>
+          </div>
+
+          <button class="btn btn-primary" type="button"
+                  id="postSkillShortcut">
+            <i class="bi bi-plus-lg me-1"></i> Share a skill
+          </button>
+        </div>
+
+        <!-- Dashboard statistics -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4">
+            <div class="surface-card p-3 p-md-4 h-100">
+              <div class="stat-label mb-1">
+                <i class="bi bi-people me-1"></i> Skill posts
+              </div>
+              <div class="stat-number" id="totalPosts">—</div>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-4">
+            <div class="surface-card p-3 p-md-4 h-100">
+              <div class="stat-label mb-1">
+                <i class="bi bi-lightbulb me-1"></i> Skills to discover
+              </div>
+              <div class="stat-number" id="uniqueSkills">—</div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <div class="surface-card p-3 p-md-4 h-100">
+              <div class="stat-label mb-1">
+                <i class="bi bi-arrow-repeat me-1"></i> Community
+              </div>
+              <div class="stat-number fs-5 mt-2">Learn & Share</div>
+            </div>
+          </div>
+        </div>
+
+        <section class="surface-card p-3 p-md-4 mb-4"
+                 aria-labelledby="creditWalletHeading">
+          <div class="row align-items-center g-3">
+            <div class="col-12 col-md-4">
+              <h3 class="h5 fw-bold mb-2" id="creditWalletHeading">
+                <i class="bi bi-wallet2 me-1" aria-hidden="true"></i>
+                Time credit wallet
+              </h3>
+              <div>
+                <span class="credit-balance" id="creditBalance">180</span>
+                <span class="text-secondary">credits</span>
+              </div>
+            </div>
+            <div class="col-12 col-md-8">
+              <p class="section-subtitle mb-2">
+                Earn 60 credits when you finish teaching, and spend 60 credits
+                to start learning a new skill. Each browser wallet starts with
+                180 credits and is saved on this device.
+              </p>
+              <div id="creditHistory" class="helper-text"
+                   aria-live="polite">No credit activity yet.</div>
+            </div>
+          </div>
+          <div id="creditMessage" class="mt-3" role="status"
+               aria-live="polite"></div>
+        </section>
+
+        <div class="surface-card p-3 p-md-4 mb-4">
+          <label class="form-label fw-semibold" for="searchInput">
+            Find a student or skill
+          </label>
+          <input
+            type="search"
+            class="form-control"
+            id="searchInput"
+            placeholder="Search names or skills they teach..."
+            autocomplete="off"
+            aria-describedby="searchHelp"
+          >
+          <div id="searchHelp" class="helper-text mt-2">
+            Search by student name or the skill they can teach.
+          </div>
+        </div>
+
+        <!-- Status messages -->
+        <div id="statusMessage" class="mb-3" role="status"
+             aria-live="polite"></div>
+
+        <!-- Cards are rendered here -->
+        <div id="skillsFeed" class="row g-4"></div>
+
+        <!-- No-results / error / loading state -->
+        <div id="emptyState" class="surface-card empty-state d-none">
+          <div class="empty-icon mb-3">
+            <i class="bi bi-people" aria-hidden="true"></i>
+          </div>
+          <h3 class="h5 fw-bold" id="emptyTitle">No skills have been posted yet</h3>
+          <p class="section-subtitle mb-3" id="emptyDescription">
+            Be the first to share a skill with your campus community.
+          </p>
+          <button class="btn btn-outline-primary" id="emptyAction"
+                  type="button">Post a skill</button>
+        </div>
+
+        <div class="text-center mt-4 d-none" id="retryContainer">
+          <button class="btn btn-outline-primary" id="retryButton"
+                  type="button">
+            <i class="bi bi-arrow-clockwise me-1"></i> Try again
+          </button>
+        </div>
+      </section>
+
+      <!-- Post a Skill form -->
+      <section id="postSection" class="form-section"
+               aria-labelledby="postHeading">
+
+        <div class="mb-4">
+          <h2 class="section-heading h3 mb-2" id="postHeading">
+            Share your skills
+          </h2>
+          <p class="section-subtitle mb-0">
+            Tell the campus community what you can teach and what you want
+            to learn.
+          </p>
+        </div>
+
+        <div class="surface-card form-card p-4 p-md-5">
+          <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="avatar">
+              <i class="bi bi-person-workspace"></i>
+            </div>
+            <div>
+              <h3 class="h5 fw-bold mb-1">Create your skill profile</h3>
+              <p class="section-subtitle small mb-0">
+                All fields are required.
+              </p>
+            </div>
+          </div>
+
+          <div id="formStatus" class="mb-3" role="alert"
+               aria-live="polite"></div>
+
+          <form id="skillForm" novalidate>
+            <div class="mb-4">
+              <label for="fullName" class="field-label">
+                Full name <span class="required-star">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="fullName"
+                name="full_name"
+                placeholder="e.g. Alex Johnson"
+                minlength="2"
+                maxlength="100"
+                autocomplete="name"
+                required
+              >
+              <div class="invalid-feedback">
+                Enter a name between 2 and 100 characters.
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="emailId" class="field-label">
+                Email ID <span class="required-star">*</span>
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id="emailId"
+                name="email_id"
+                placeholder="e.g. alex@example.com"
+                maxlength="200"
+                autocomplete="email"
+                required
+              >
+              <div class="invalid-feedback">
+                Enter a valid email address.
+              </div>
+              <div class="helper-text mt-2">
+                Your email is shown when another student connects with you.
+              </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+              <div class="col-md-6">
+                <label for="skillTeach" class="field-label">
+                  Skill you can teach <span class="required-star">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="skillTeach"
+                  name="skill_teach"
+                  placeholder="e.g. Python programming"
+                  minlength="2"
+                  maxlength="100"
+                  required
+                >
+                <div class="invalid-feedback">
+                  Enter a skill between 2 and 100 characters.
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="enrollmentNo" class="field-label">
+                  Enrollment No.
+                  <span class="required-star">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="enrollmentNo"
+                  name="enrollment_no"
+                  placeholder="Enter your enrollment number"
+                  minlength="2"
+                  maxlength="100"
+                  required
+                >
+                <div class="invalid-feedback">
+                  Enter an enrollment number between 2 and 100 characters.
+                </div>
+              </div>
+            </div>
+
+            <div class="alert alert-info small border-0 rounded-3">
+              <i class="bi bi-info-circle me-2"></i>
+              Your enrollment number is shown only in the contact details
+              after someone connects. Never submit passwords.
+            </div>
+
+            <div class="d-grid gap-2 d-sm-flex mt-4">
+              <button type="submit" class="btn btn-primary px-4 py-3"
+                      id="submitButton">
+                <span id="submitButtonText">
+                  <i class="bi bi-send me-2"></i> Publish my skill
+                </span>
+                <span id="submitSpinner"
+                      class="spinner-border spinner-border-sm ms-2 d-none"
+                      aria-hidden="true"></span>
+              </button>
+
+              <button type="button" class="btn btn-light px-4 py-3"
+                      id="cancelPostButton">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Contact modal -->
+  <div class="modal fade" id="contactModal" tabindex="-1"
+       aria-labelledby="contactModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 rounded-4 shadow">
+        <div class="modal-header border-0 pb-0">
+          <h2 class="modal-title h5 fw-bold" id="contactModalTitle">
+            Connect with a student
+          </h2>
+          <button type="button" class="btn-close"
+                  data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body p-4">
+          <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="avatar" id="contactAvatar">AS</div>
+            <div>
+              <h3 class="h5 fw-bold mb-1" id="contactName">Student</h3>
+              <p class="section-subtitle small mb-0">
+                Campus skill exchange member
+              </p>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="helper-text mb-2">CAN TEACH</div>
+            <span class="skill-badge badge-teach" id="contactTeach"></span>
+          </div>
+
+          <div class="mb-4">
+            <div class="helper-text mb-2">ENROLLMENT NO.</div>
+            <span class="skill-badge badge-learn" id="contactEnrollmentNo"></span>
+          </div>
+
+          <div class="surface-card p-3">
+            <div class="helper-text mb-2">EMAIL ID</div>
+            <div class="fw-semibold text-break" id="contactEmail"></div>
+            <button type="button" class="btn btn-outline-primary btn-sm mt-3"
+                    id="copyContactButton">
+              <i class="bi bi-copy me-1"></i> Copy email
+            </button>
+          </div>
+
+          <p class="helper-text mt-3 mb-0">
+            Be respectful and agree on a suitable time and place to learn.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="appToast" class="toast border-0 shadow" role="status"
+         aria-live="polite" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toastMessage">Notification</div>
+        <button type="button" class="btn-close me-2 m-auto"
+                data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="py-4">
+    <div class="container d-flex flex-column flex-sm-row
+                justify-content-between align-items-center gap-2">
+      <div class="fw-bold text-dark">
+        <i class="bi bi-arrow-left-right me-1 text-primary"></i> Adtu-Swap
+      </div>
+      <div class="small text-center">
+        Built for students, powered by community.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    (() => {
+    "use strict";
+
+    if (window.aSwapInitializedDocument === document) return;
+    window.aSwapInitializedDocument = document;
+
+    const SUPABASE_URL = "https://qivkalxpsnyaozxrwjnm.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpdmthbHhwc255YW96eHJ3am5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyMzgzMTUsImV4cCI6MjEwODgxNDMxNX0.Q3Q7mgS5Rpi5u8_-AlgxtGYRmXSPrtxThdruvehYH48";
+
+    const supabaseConfigured =
+      SUPABASE_URL !== "YOUR_SUPABASE_PROJECT_URL" &&
+      SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY" &&
+      /^https:\/\/.+/.test(SUPABASE_URL);
+
+    const supabase = supabaseConfigured
+      ? window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY,
+          {
+            auth: {
+              persistSession: false,
+              autoRefreshToken: false,
+              detectSessionInUrl: false
+            }
+          }
+        )
+      : null;
+
+    let allSkills = [];
+    let currentContact = null;
+    let isFetching = false;
+    let isPosting = false;
+    const CREDIT_AMOUNT = 60;
+    const STARTING_CREDITS = 180;
+    const CREDIT_STORAGE_KEY = "aSwapTimeCredits";
+    let creditState = {
+      balance: STARTING_CREDITS,
+      transactions: [],
+      completed: {}
+    };
+
+    const $ = (selector) => document.querySelector(selector);
+
+    const dashboardSection = $("#dashboardSection");
+    const postSection = $("#postSection");
+    const skillsFeed = $("#skillsFeed");
+    const emptyState = $("#emptyState");
+    const emptyTitle = $("#emptyTitle");
+    const emptyDescription = $("#emptyDescription");
+    const emptyAction = $("#emptyAction");
+    const statusMessage = $("#statusMessage");
+    const retryContainer = $("#retryContainer");
+    const searchInput = $("#searchInput");
+    const skillForm = $("#skillForm");
+    const submitButton = $("#submitButton");
+    const submitButtonText = $("#submitButtonText");
+    const submitSpinner = $("#submitSpinner");
+
+    const contactModal = bootstrap.Modal.getOrCreateInstance(
+      $("#contactModal")
+    );
+
+    const toast = bootstrap.Toast.getOrCreateInstance(
+      $("#appToast"),
+      { delay: 3500 }
+    );
+
+    function createElement(tag, className, text) {
+      const element = document.createElement(tag);
+
+      if (className) {
+        element.className = className;
+      }
+
+      if (text !== undefined && text !== null) {
+        element.textContent = String(text);
+      }
+
+      return element;
+    }
+
+    function showToast(message) {
+      $("#toastMessage").textContent = message;
+      toast.show();
+    }
+
+    function loadCreditState() {
+      try {
+        const savedState = JSON.parse(
+          window.localStorage.getItem(CREDIT_STORAGE_KEY) || "null"
+        );
+
+        if (savedState === null) {
+          window.localStorage.setItem(
+            CREDIT_STORAGE_KEY,
+            JSON.stringify(creditState)
+          );
+          return creditState;
+        }
+
+        const validState =
+          savedState &&
+          Number.isInteger(savedState.balance) &&
+          savedState.balance >= 0 &&
+          Array.isArray(savedState.transactions) &&
+          savedState.transactions.every((transaction) =>
+            transaction &&
+            (transaction.amount === CREDIT_AMOUNT ||
+              transaction.amount === -CREDIT_AMOUNT) &&
+            typeof transaction.label === "string" &&
+            typeof transaction.timestamp === "string"
+          ) &&
+          savedState.completed &&
+          typeof savedState.completed === "object" &&
+          !Array.isArray(savedState.completed);
+
+        if (!validState) {
+          throw new Error("Saved credit data has an invalid format.");
+        }
+
+        if (
+          savedState.balance === 0 &&
+          savedState.transactions.length === 0 &&
+          Object.keys(savedState.completed).length === 0
+        ) {
+          savedState.balance = STARTING_CREDITS;
+          window.localStorage.setItem(
+            CREDIT_STORAGE_KEY,
+            JSON.stringify(savedState)
+          );
+        }
+
+        return savedState;
+      } catch (error) {
+        console.error("Unable to load time credits:", error);
+        $("#creditMessage").textContent =
+          "Your saved credit history could not be loaded. A new wallet is being used.";
+        $("#creditMessage").className = "mt-3 alert alert-warning py-2 mb-0";
+        return creditState;
+      }
+    }
+
+    function getSkillCreditKey(skill) {
+      const listingId = skill.id ?? skill.created_at ?? [
+        skill.full_name,
+        skill.email_id,
+        skill.skill_teach,
+        skill.enrollment_no
+      ];
+      return JSON.stringify(listingId);
+    }
+
+    function renderCreditWallet() {
+      $("#creditBalance").textContent = String(creditState.balance);
+
+      const history = $("#creditHistory");
+      history.replaceChildren();
+      if (creditState.transactions.length === 0) {
+        history.textContent = "No credit activity yet.";
+        return;
+      }
+
+      creditState.transactions.slice(-3).reverse().forEach((transaction) => {
+        const amount = transaction.amount > 0
+          ? `+${transaction.amount}`
+          : String(transaction.amount);
+        history.appendChild(
+          createElement("div", "", `${transaction.label}: ${amount} credits`)
+        );
+      });
+    }
+
+    function showCreditMessage(message, type) {
+      const element = $("#creditMessage");
+      element.textContent = message;
+      element.className = message
+        ? `mt-3 alert alert-${type} py-2 mb-0`
+        : "mt-3";
+    }
+
+    function recordCreditAction(skill, action) {
+      const actionKey = `${action}:${getSkillCreditKey(skill)}`;
+      if (creditState.completed[actionKey]) {
+        showCreditMessage(
+          "This credit action has already been recorded for this skill.",
+          "info"
+        );
+        return;
+      }
+
+      const amount = action === "teach" ? CREDIT_AMOUNT : -CREDIT_AMOUNT;
+      if (creditState.balance + amount < 0) {
+        showCreditMessage(
+          "You need 60 credits to learn a skill. Teach a skill first to earn credits.",
+          "warning"
+        );
+        return;
+      }
+
+      const nextState = {
+        balance: creditState.balance + amount,
+        transactions: [
+          ...creditState.transactions,
+          {
+            amount,
+            label: action === "teach"
+              ? `Taught ${skill.skill_teach}`
+              : `Started learning ${skill.skill_teach}`,
+            timestamp: new Date().toISOString()
+          }
+        ],
+        completed: { ...creditState.completed, [actionKey]: true }
+      };
+
+      try {
+        window.localStorage.setItem(
+          CREDIT_STORAGE_KEY,
+          JSON.stringify(nextState)
+        );
+      } catch (error) {
+        console.error("Unable to save time credits:", error);
+        showCreditMessage(
+          "Your credit change could not be saved. Check your browser storage and try again.",
+          "danger"
+        );
+        return;
+      }
+
+      creditState = nextState;
+      renderCreditWallet();
+      showCreditMessage(
+        action === "teach"
+          ? "Teaching completed — 60 credits added."
+          : "Learning started — 60 credits spent.",
+        "success"
+      );
+      filterSkills();
+    }
+
+    function showFormMessage(message, type = "danger") {
+      const alert = createElement(
+        "div",
+        `alert alert-${type} rounded-3 mb-0`,
+        message
+      );
+      $("#formStatus").replaceChildren(alert);
+    }
+
+    function clearFormMessage() {
+      $("#formStatus").replaceChildren();
+    }
+
+    function setBusy(isBusy) {
+      isPosting = isBusy;
+      submitButton.disabled = isBusy;
+      submitSpinner.classList.toggle("d-none", !isBusy);
+
+      submitButtonText.textContent = isBusy
+        ? "Publishing..."
+        : "Publish my skill";
+
+      if (!isBusy) {
+        const icon = createElement("i", "bi bi-send me-2");
+        submitButtonText.prepend(icon);
+      }
+    }
+
+    function switchView(view) {
+      const showPost = view === "post";
+
+      dashboardSection.classList.toggle("hidden", showPost);
+      postSection.classList.toggle("active", showPost);
+
+      document.querySelectorAll("[data-view]").forEach((link) => {
+        const isActive = link.dataset.view === view;
+        link.classList.toggle("active", isActive);
+
+        if (isActive) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+
+      const navbar = $("#mainNavbar");
+      if (navbar.classList.contains("show")) {
+        bootstrap.Collapse.getOrCreateInstance(navbar).hide();
+      }
+
+      if (showPost) {
+        clearFormMessage();
+        window.location.hash = "post-skill";
+        $("#fullName").focus({ preventScroll: true });
+      } else {
+        window.location.hash = "dashboard";
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll("[data-view]").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        switchView(link.dataset.view);
+      });
+    });
+
+    $("#brandLink").addEventListener("click", (event) => {
+      event.preventDefault();
+      switchView("dashboard");
+    });
+
+    $("#postSkillShortcut").addEventListener("click", () => {
+      switchView("post");
+    });
+
+    $("#cancelPostButton").addEventListener("click", () => {
+      switchView("dashboard");
+    });
+
+    emptyAction.addEventListener("click", () => {
+      switchView("post");
+    });
+
+    $("#retryButton").addEventListener("click", () => {
+      fetchSkills();
+    });
+
+    function updateStats(skills) {
+      $("#totalPosts").textContent = skills.length;
+
+      const unique = new Set();
+
+      skills.forEach((skill) => {
+        if (skill.skill_teach) {
+          unique.add(skill.skill_teach.trim().toLowerCase());
+        }
+      });
+
+      $("#uniqueSkills").textContent = unique.size;
+    }
+
+    function renderSkillCard(skill) {
+      const column = createElement("div", "col-12 col-md-6 col-xl-4");
+      const card = createElement(
+        "article",
+        "surface-card skill-card p-4"
+      );
+
+      const header = createElement(
+        "div",
+        "d-flex align-items-center gap-3 mb-4"
+      );
+
+      const initials = String(skill.full_name || "?")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part.charAt(0))
+        .join("")
+        .toUpperCase();
+
+      const avatar = createElement("div", "avatar", initials || "?");
+      avatar.setAttribute("aria-hidden", "true");
+
+      const identity = createElement("div", "min-w-0");
+      const name = createElement(
+        "h3",
+        "h6 fw-bold mb-1 text-break",
+        skill.full_name
+      );
+      const role = createElement(
+        "div",
+        "helper-text",
+        "Campus community member"
+      );
+
+      identity.append(name, role);
+      header.append(avatar, identity);
+
+      const teachBlock = createElement("div", "mb-3");
+      const teachLabel = createElement(
+        "div",
+        "helper-text mb-2 fw-semibold",
+        "CAN TEACH"
+      );
+      const teachBadge = createElement(
+        "span",
+        "skill-badge badge-teach",
+        skill.skill_teach
+      );
+      teachBlock.append(teachLabel, teachBadge);
+
+      const learnBlock = createElement("div", "mb-4");
+      const learnLabel = createElement(
+        "div",
+        "helper-text mb-2 fw-semibold",
+        "ENROLLMENT NO."
+      );
+      const learnBadge = createElement(
+        "span",
+        "skill-badge badge-learn",
+        "Shown after connecting"
+      );
+      learnBlock.append(learnLabel, learnBadge);
+
+      const connectButton = createElement(
+        "button",
+        "btn btn-outline-primary btn-connect mt-auto",
+        ""
+      );
+      connectButton.type = "button";
+      connectButton.innerHTML =
+        '<i class="bi bi-chat-dots me-2" aria-hidden="true"></i>Connect';
+      connectButton.setAttribute(
+        "aria-label",
+        `View contact information for ${skill.full_name}`
+      );
+
+      connectButton.addEventListener("click", () => {
+        openContact(skill);
+      });
+
+      const teachActionKey = `teach:${getSkillCreditKey(skill)}`;
+      const teachButton = createElement(
+        "button",
+        "btn btn-outline-success w-100 mt-2",
+        creditState.completed[teachActionKey]
+          ? "Teaching completed (+60)"
+          : "Mark teaching complete (+60)"
+      );
+      teachButton.type = "button";
+      teachButton.disabled = Boolean(creditState.completed[teachActionKey]);
+      teachButton.addEventListener("click", () => {
+        recordCreditAction(skill, "teach");
+      });
+
+      const learnActionKey = `learn:${getSkillCreditKey(skill)}`;
+      const learnButton = createElement(
+        "button",
+        "btn btn-outline-primary w-100 mt-2",
+        creditState.completed[learnActionKey]
+          ? "Learning started (-60)"
+          : "Learn this skill (-60)"
+      );
+      learnButton.type = "button";
+      learnButton.disabled = Boolean(creditState.completed[learnActionKey]);
+      learnButton.addEventListener("click", () => {
+        recordCreditAction(skill, "learn");
+      });
+
+      card.append(
+        header,
+        teachBlock,
+        learnBlock,
+        connectButton,
+        teachButton,
+        learnButton
+      );
+      column.append(card);
+
+      return column;
+    }
+
+    function renderSkills(skills) {
+      skillsFeed.replaceChildren();
+      emptyState.classList.add("d-none");
+
+      if (skills.length === 0) {
+        const searching = Boolean(searchInput.value.trim());
+        emptyTitle.textContent = searching
+          ? "No matching skills"
+          : "No skills have been posted yet";
+        emptyDescription.textContent = searching
+          ? "Try another name or skill."
+          : "Be the first to share a skill with your campus community.";
+        emptyAction.textContent = searching ? "Clear search" : "Post a skill";
+        emptyAction.onclick = searching
+          ? () => {
+              searchInput.value = "";
+              filterSkills();
+            }
+          : () => switchView("post");
+
+        emptyState.classList.remove("d-none");
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+
+      skills.forEach((skill) => {
+        fragment.appendChild(renderSkillCard(skill));
+      });
+
+      skillsFeed.appendChild(fragment);
+    }
+
+    async function fetchSkills() {
+      if (isFetching) return;
+
+      if (!supabaseConfigured || !supabase) {
+        allSkills = [];
+        skillsFeed.replaceChildren();
+        updateStats([]);
+        statusMessage.replaceChildren(
+          createElement(
+            "div",
+            "alert alert-warning rounded-3",
+            "Supabase is not connected. Add the anon/public key from your Supabase project settings to SUPABASE_ANON_KEY in this file."
+          )
+        );
+
+        emptyTitle.textContent = "Connect your Supabase project";
+        emptyDescription.textContent =
+          "Add your Supabase anon/public key to A-SWAP.html, then reload this page.";
+        emptyAction.textContent = "Post a skill";
+        emptyAction.onclick = () => switchView("post");
+        emptyState.classList.remove("d-none");
+        retryContainer.classList.add("d-none");
+        return;
+      }
+
+      isFetching = true;
+      retryContainer.classList.add("d-none");
+      statusMessage.replaceChildren(
+        createElement(
+          "div",
+          "text-center py-3 text-secondary",
+          "Loading campus skills..."
+        )
+      );
+      skillsFeed.replaceChildren();
+      emptyState.classList.add("d-none");
+
+      try {
+        let data;
+        for (let attempt = 0; attempt < 2; attempt += 1) {
+          const result = await supabase
+            .from("skills_posts")
+            .select("full_name, email_id, skill_teach, enrollment_no")
+            .order("full_name", { ascending: true });
+
+          if (!result.error) {
+            data = result.data;
+            break;
+          }
+
+          if (attempt === 1) throw result.error;
+
+          console.warn("Skill posts failed to load; retrying once:", result.error);
+          await new Promise((resolve) => window.setTimeout(resolve, 1000));
+        }
+
+        allSkills = Array.isArray(data) ? data : [];
+        updateStats(allSkills);
+        statusMessage.replaceChildren();
+
+        filterSkills();
+      } catch (error) {
+        console.error("Unable to fetch skill posts:", error);
+
+        allSkills = [];
+        updateStats([]);
+        skillsFeed.replaceChildren();
+
+        statusMessage.replaceChildren(
+          createElement(
+            "div",
+            "alert alert-danger rounded-3",
+            error?.status === 522 || /522|timed out|timeout/i.test(error?.message || "")
+              ? "Supabase is temporarily unavailable (HTTP 522). Please wait and try again."
+              : "We couldn't load the skill directory. Check your connection and Supabase table permissions, then try again."
+          )
+        );
+
+        emptyState.classList.add("d-none");
+        retryContainer.classList.remove("d-none");
+      } finally {
+        isFetching = false;
+      }
+    }
+
+    function filterSkills() {
+      const query = searchInput.value.trim().toLowerCase();
+      const matches = allSkills.filter((skill) =>
+        [skill.full_name, skill.skill_teach].some((value) =>
+          String(value || "").toLowerCase().includes(query)
+        )
+      );
+      renderSkills(matches);
+    }
+
+    searchInput.addEventListener("input", filterSkills);
+
+    function openContact(skill) {
+      currentContact = skill;
+
+      const name = String(skill.full_name || "Student");
+      $("#contactName").textContent = name;
+      $("#contactAvatar").textContent = name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part.charAt(0))
+        .join("")
+        .toUpperCase() || "?";
+
+      $("#contactTeach").textContent = skill.skill_teach || "Not specified";
+      $("#contactEnrollmentNo").textContent =
+        skill.enrollment_no || "Not provided";
+      $("#contactEmail").textContent = skill.email_id || "No email provided";
+
+      contactModal.show();
+    }
+
+    $("#copyContactButton").addEventListener("click", async () => {
+      if (!currentContact || !currentContact.email_id) {
+        showToast("No email address is available.");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(
+          String(currentContact.email_id)
+        );
+        showToast("Email address copied.");
+      } catch (error) {
+        console.error("Clipboard access failed:", error);
+        showToast("Copy is unavailable. Please select the email manually.");
+      }
+    });
+
+    async function postSkill(event) {
+      event.preventDefault();
+
+      if (isPosting) return;
+
+      clearFormMessage();
+
+      if (!skillForm.checkValidity()) {
+        skillForm.classList.add("was-validated");
+        skillForm.reportValidity();
+        return;
+      }
+
+      if (!supabaseConfigured || !supabase) {
+        showFormMessage(
+          "Supabase is not connected. Add the anon/public key from your Supabase project settings to A-SWAP.html before publishing.",
+          "warning"
+        );
+        return;
+      }
+
+      const formData = {
+        full_name: $("#fullName").value.trim(),
+        email_id: $("#emailId").value.trim(),
+        skill_teach: $("#skillTeach").value.trim(),
+        enrollment_no: $("#enrollmentNo").value.trim()
+      };
+
+      const limits = {
+        full_name: 100,
+        email_id: 200,
+        skill_teach: 100,
+        enrollment_no: 100
+      };
+
+      for (const [field, value] of Object.entries(formData)) {
+        if (!value || value.length < 2 || value.length > limits[field]) {
+          showFormMessage(
+            "Please check each field. All fields must contain valid text within the specified length limits."
+          );
+          return;
+        }
+      }
+
+      setBusy(true);
+
+      try {
+        const { error } = await supabase
+          .from("skills_posts")
+          .insert([formData]);
+
+        if (error) throw error;
+
+        skillForm.reset();
+        skillForm.classList.remove("was-validated");
+        clearFormMessage();
+
+        showToast("Your skill has been published successfully!");
+
+        switchView("dashboard");
+        await fetchSkills();
+      } catch (error) {
+        console.error("Unable to publish skill:", error);
+
+        showFormMessage(
+          "Your skill could not be published. Please check your internet connection and database permissions, then try again."
+        );
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    skillForm.addEventListener("submit", postSkill);
+
+
+    function initializeApp() {
+      creditState = loadCreditState();
+      renderCreditWallet();
+
+      const initialView =
+        window.location.hash === "#post-skill" ? "post" : "dashboard";
+
+      dashboardSection.classList.toggle(
+        "hidden",
+        initialView === "post"
+      );
+      postSection.classList.toggle(
+        "active",
+        initialView === "post"
+      );
+
+      document.querySelectorAll("[data-view]").forEach((link) => {
+        const active = link.dataset.view === initialView;
+        link.classList.toggle("active", active);
+
+        if (active) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+
+      fetchSkills();
+    }
+
+    initializeApp();
+    })();
+  </script>
+</body>
+</html>
