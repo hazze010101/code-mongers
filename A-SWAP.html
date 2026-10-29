@@ -72,7 +72,7 @@
     }
 
     .college-logo {
-      width: 130px;
+      width: 36px;
       height: 36px;
       margin-right: 8px;
       border-radius: 8px;
@@ -356,9 +356,9 @@
          id="brandLink" aria-label="A-Swap home">
         <img
           class="college-logo"
-          src="https://adtu.in/assets/images/logo-chat.png"
+          src="https://cdn.collegewollege.com/storage/colleges/thumbnails/zDh1vB7tNmwdUW1YiWCniMJi58FTRamHkwkECP8v.webp"
           alt="Assam down town University logo"
-          width="130"
+          width="36"
           height="36"
         >
         A-Swap
@@ -748,18 +748,8 @@
   <script>
     "use strict";
 
-    // =========================================================
-    // 1. SUPABASE CONFIGURATION
-    // Replace these placeholders with your Supabase project values.
-    // Use the publishable/anon key ONLY. Never expose a service-role key.
-    // =========================================================
-
     const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
     const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-
-    // =========================================================
-    // 2. INITIALIZE SUPABASE
-    // =========================================================
 
     const supabaseConfigured =
       SUPABASE_URL !== "YOUR_SUPABASE_PROJECT_URL" &&
@@ -779,10 +769,6 @@
           }
         )
       : null;
-
-    // =========================================================
-    // 3. APPLICATION STATE AND DOM REFERENCES
-    // =========================================================
 
     let allSkills = [];
     let currentContact = null;
@@ -814,12 +800,6 @@
       $("#appToast"),
       { delay: 3500 }
     );
-
-    // =========================================================
-    // 4. SAFE DOM HELPERS
-    // Use textContent rather than inserting user-provided strings
-    // into innerHTML. This helps prevent cross-site scripting (XSS).
-    // =========================================================
 
     function createElement(tag, className, text) {
       const element = document.createElement(tag);
@@ -868,10 +848,6 @@
       }
     }
 
-    // =========================================================
-    // 5. SINGLE-PAGE NAVIGATION
-    // =========================================================
-
     function switchView(view) {
       const showPost = view === "post";
 
@@ -889,7 +865,6 @@
         }
       });
 
-      // Close the mobile navigation menu after selecting a page.
       const navbar = $("#mainNavbar");
       if (navbar.classList.contains("show")) {
         bootstrap.Collapse.getOrCreateInstance(navbar).hide();
@@ -934,10 +909,6 @@
     $("#retryButton").addEventListener("click", () => {
       fetchSkills();
     });
-
-    // =========================================================
-    // 6. DASHBOARD RENDERING
-    // =========================================================
 
     function updateStats(skills) {
       $("#totalPosts").textContent = skills.length;
@@ -1033,7 +1004,6 @@
         `View contact information for ${skill.full_name}`
       );
 
-      // The skill object comes from the current fetched dataset.
       connectButton.addEventListener("click", () => {
         openContact(skill);
       });
@@ -1045,7 +1015,6 @@
     }
 
     function renderSkills(skills) {
-      // Clear previous cards before drawing the current results.
       skillsFeed.replaceChildren();
       emptyState.classList.add("d-none");
 
@@ -1083,11 +1052,6 @@
 
       skillsFeed.appendChild(fragment);
     }
-
-    // =========================================================
-    // 7. FETCH SKILLS FROM SUPABASE
-    // Retrieves the newest skill posts first.
-    // =========================================================
 
     async function fetchSkills() {
       if (isFetching) return;
@@ -1161,11 +1125,6 @@
       }
     }
 
-    // =========================================================
-    // 8. CLIENT-SIDE SEARCH
-    // Filters the fetched array immediately as the user types.
-    // =========================================================
-
     function filterSkills() {
       const query = searchInput.value.trim().toLowerCase();
 
@@ -1180,10 +1139,6 @@
     }
 
     searchInput.addEventListener("input", filterSkills);
-
-    // =========================================================
-    // 9. CONTACT MODAL
-    // =========================================================
 
     function openContact(skill) {
       currentContact = skill;
@@ -1223,11 +1178,6 @@
       }
     });
 
-    // =========================================================
-    // 10. POST A SKILL TO SUPABASE
-    // Inserts the form data into the skill_posts table.
-    // =========================================================
-
     async function postSkill(event) {
       event.preventDefault();
 
@@ -1235,7 +1185,6 @@
 
       clearFormMessage();
 
-      // Native browser validation plus explicit checks.
       if (!skillForm.checkValidity()) {
         skillForm.classList.add("was-validated");
         skillForm.reportValidity();
@@ -1257,7 +1206,6 @@
         skill_learn: $("#skillLearn").value.trim()
       };
 
-      // Enforce length limits even if the client is manipulated.
       const limits = {
         full_name: 100,
         contact_info: 200,
@@ -1277,7 +1225,6 @@
       setBusy(true);
 
       try {
-        // Do not accept created_at or other privileged fields from the client.
         const { error } = await supabase
           .from("skill_posts")
           .insert([formData]);
@@ -1290,7 +1237,6 @@
 
         showToast("Your skill has been published successfully!");
 
-        // Return to the dashboard and fetch the updated directory.
         switchView("dashboard");
         await fetchSkills();
       } catch (error) {
@@ -1306,15 +1252,11 @@
 
     skillForm.addEventListener("submit", postSkill);
 
-    // =========================================================
-    // 11. INITIALIZE THE APPLICATION
-    // =========================================================
 
     function initializeApp() {
       const initialView =
         window.location.hash === "#post-skill" ? "post" : "dashboard";
 
-      // Set initial view without requiring a page reload.
       dashboardSection.classList.toggle(
         "hidden",
         initialView === "post"
